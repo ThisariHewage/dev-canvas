@@ -85,7 +85,7 @@ export const updateProfile = async (req, res, next) => {
         );
 
         if (!user) {
-            return res.status(44.404).json({ success: false, message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
         // issue a fresh token with updated profile info

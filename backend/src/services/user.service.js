@@ -3,8 +3,8 @@ import Project from '../models/Project.js';
 import Follower from '../models/Follower.js';
 
 export const updateUserService = async (userId, data) => {
-  const { bio, technologies, location, institute } = data;
-  
+  const { bio, technologies, location, institute, contactNumber, organizationName } = data;
+
   let techArray = [];
   if (typeof technologies === 'string') {
     techArray = technologies.split(',').map((t) => t.trim()).filter((t) => t);
@@ -20,6 +20,8 @@ export const updateUserService = async (userId, data) => {
         technologies: techArray,
         location,
         institute,
+        contactNumber,
+        organizationName,
       },
     },
     { new: true, runValidators: true }
@@ -30,7 +32,7 @@ export const updateUserService = async (userId, data) => {
 
 export const getUserByIdService = async (id) => {
   const user = await User.findById(id)
-    .select('name email profilePic role bio technologies location institute createdAt');
+    .select('name email profilePic role bio technologies location institute contactNumber organizationName createdAt');
 
   if (!user) {
     return null;

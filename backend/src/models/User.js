@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema({
   institute: {
     type: String
   },
+  contactNumber: {
+    type: String
+  },
+  organizationName: {
+    type: String
+  },
   isNewUser: {
     type: Boolean,
     default: true

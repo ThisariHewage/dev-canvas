@@ -32,9 +32,9 @@ const StudentPublicProfilePage = () => {
   const isRecruiter = currentUser?.role === 'RECRUITER';
 
   const [profileData, setProfileData] = useState(null);
-  const [isLoading, setIsLoading]     = useState(true);
-  const [error, setError]             = useState(null);
-  const [following, setFollowing]     = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [following, setFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -62,7 +62,7 @@ const StudentPublicProfilePage = () => {
     if (isOwnProfile) return;
     getFollowStatus(id)
       .then((r) => setFollowing(Boolean(r.data?.following)))
-      .catch(() => {});
+      .catch(() => { });
   }, [id, isRecruiter]);
 
   const handleFollow = async () => {
@@ -147,11 +147,10 @@ const StudentPublicProfilePage = () => {
                 <button
                   onClick={handleFollow}
                   disabled={isFollowing}
-                  className={`shrink-0 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none border ${
-                    following
+                  className={`shrink-0 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none border ${following
                       ? 'bg-white text-slate-700 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200'
                       : 'bg-slate-900 text-white border-slate-900 hover:bg-black'
-                  } disabled:opacity-60`}
+                    } disabled:opacity-60`}
                 >
                   {isFollowing ? 'Updating…' : following ? '✓ Following' : '+ Follow'}
                 </button>
@@ -171,6 +170,16 @@ const StudentPublicProfilePage = () => {
               {user.institute && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border border-slate-100">
                   🎓 {user.institute}
+                </span>
+              )}
+              {user.contactNumber && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border border-slate-100">
+                  📞 {user.contactNumber}
+                </span>
+              )}
+              {user.organizationName && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border border-slate-100">
+                  🏢 {user.organizationName}
                 </span>
               )}
               {user.createdAt && (

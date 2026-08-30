@@ -66,6 +66,12 @@ export default function CreateProjectPage() {
     githubUrl: '',
     demoUrl: '',
     tags: '',
+    exhibitionName: '',
+    reservationDate: '',
+    stallType: '',
+    preferredStallSize: '',
+    numberOfStalls: '',
+    businessCategory: '',
   });
   const [coverImage, setCoverImage] = useState(null);
   const [extraImages, setExtraImages] = useState([]);
@@ -128,6 +134,12 @@ export default function CreateProjectPage() {
     formData.append('githubUrl', form.githubUrl);
     formData.append('demoUrl', form.demoUrl);
     formData.append('tags', form.tags);
+    formData.append('exhibitionName', form.exhibitionName);
+    formData.append('reservationDate', form.reservationDate);
+    formData.append('stallType', form.stallType);
+    formData.append('preferredStallSize', form.preferredStallSize);
+    formData.append('numberOfStalls', form.numberOfStalls);
+    formData.append('businessCategory', form.businessCategory);
     formData.append('coverImage', coverImage);
     extraImages.forEach((file) => formData.append('extraImages', file));
 
@@ -281,7 +293,112 @@ export default function CreateProjectPage() {
                   </div>
                 </div>
 
-                {/* Row 3: Description */}
+                {/* Row 3: Reservation Fields */}
+                <div className="border border-slate-200/80 rounded-xl p-4 bg-slate-50/50">
+                  <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Stall Reservation Details</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Exhibition Name */}
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="exhibitionName" className="text-xs font-semibold text-slate-600">Exhibition / Event</label>
+                      <select
+                        id="exhibitionName"
+                        name="exhibitionName"
+                        value={form.exhibitionName}
+                        onChange={handleChange}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition"
+                      >
+                        <option value="">Select event...</option>
+                        <option value="TechExpo 2026">TechExpo 2026</option>
+                        <option value="CraftFair 2026">CraftFair 2026</option>
+                        <option value="Bookfair 2026">Bookfair 2026</option>
+                      </select>
+                    </div>
+
+                    {/* Reservation Date */}
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="reservationDate" className="text-xs font-semibold text-slate-600">Reservation Date</label>
+                      <input
+                        id="reservationDate"
+                        type="date"
+                        name="reservationDate"
+                        value={form.reservationDate}
+                        onChange={handleChange}
+                        min={new Date().toISOString().split('T')[0]}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition"
+                      />
+                    </div>
+
+                    {/* Stall Type */}
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="stallType" className="text-xs font-semibold text-slate-600">Stall Type</label>
+                      <select
+                        id="stallType"
+                        name="stallType"
+                        value={form.stallType}
+                        onChange={handleChange}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition"
+                      >
+                        <option value="">Select type...</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Corner Stall">Corner Stall</option>
+                      </select>
+                    </div>
+
+                    {/* Preferred Stall Size */}
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="preferredStallSize" className="text-xs font-semibold text-slate-600">Preferred Stall Size</label>
+                      <select
+                        id="preferredStallSize"
+                        name="preferredStallSize"
+                        value={form.preferredStallSize}
+                        onChange={handleChange}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition"
+                      >
+                        <option value="">Select size...</option>
+                        <option value="Small">Small</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Large">Large</option>
+                      </select>
+                    </div>
+
+                    {/* Number of Stalls */}
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="numberOfStalls" className="text-xs font-semibold text-slate-600">Number of Stalls</label>
+                      <input
+                        id="numberOfStalls"
+                        type="number"
+                        name="numberOfStalls"
+                        value={form.numberOfStalls}
+                        onChange={handleChange}
+                        min="1"
+                        placeholder="1"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition"
+                      />
+                    </div>
+
+                    {/* Business Category */}
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="businessCategory" className="text-xs font-semibold text-slate-600">Business Category</label>
+                      <select
+                        id="businessCategory"
+                        name="businessCategory"
+                        value={form.businessCategory}
+                        onChange={handleChange}
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition"
+                      >
+                        <option value="">Select category...</option>
+                        <option value="Food & Beverage">Food & Beverage</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Handicrafts">Handicrafts</option>
+                        <option value="Services">Services</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Row 4: Description */}
                 <div className="flex flex-col gap-1">
                   <div className="flex justify-between items-center text-xs font-semibold text-slate-600">
                     <label htmlFor="description">Label / Description</label>
@@ -343,11 +460,10 @@ export default function CreateProjectPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-8 py-2.5 font-bold rounded-xl shadow-md transition-all duration-200 text-sm flex items-center gap-2 ${
-                    isSubmitting
+                  className={`px-8 py-2.5 font-bold rounded-xl shadow-md transition-all duration-200 text-sm flex items-center gap-2 ${isSubmitting
                       ? 'bg-slate-400 text-slate-200 cursor-not-allowed'
                       : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:shadow-lg cursor-pointer'
-                  }`}
+                    }`}
                 >
                   {isSubmitting ? (
                     <>

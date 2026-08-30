@@ -14,7 +14,9 @@ const StudentProfile = () => {
     bio: user?.bio || '',
     technologies: Array.isArray(user?.technologies) ? user.technologies.join(', ') : '',
     location: user?.location || '',
-    institute: user?.institute || ''
+    institute: user?.institute || '',
+    contactNumber: user?.contactNumber || '',
+    organizationName: user?.organizationName || ''
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -24,7 +26,9 @@ const StudentProfile = () => {
         bio: user.bio || '',
         technologies: Array.isArray(user.technologies) ? user.technologies.join(', ') : '',
         location: user.location || '',
-        institute: user.institute || ''
+        institute: user.institute || '',
+        contactNumber: user.contactNumber || '',
+        organizationName: user.organizationName || ''
       });
     }
   }, [user]);
@@ -131,6 +135,28 @@ const StudentProfile = () => {
                   placeholder="University Name"
                 />
               </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">Contact Number</label>
+                <input
+                  type="tel"
+                  name="contactNumber"
+                  value={formData.contactNumber}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-slate-800 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                  placeholder="+94 77 123 4567"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">Organization / Business Name</label>
+                <input
+                  type="text"
+                  name="organizationName"
+                  value={formData.organizationName}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-slate-800 focus:outline-none focus:border-slate-900 transition-colors text-sm"
+                  placeholder="Business or Organization"
+                />
+              </div>
 
               <div className="pt-4">
                 <button
@@ -162,8 +188,8 @@ const StudentProfile = () => {
                       <span className="text-xs text-slate-500 font-medium tracking-wide">
                         {new Date(project.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                       </span>
-                      <Link 
-                        to={`/edit-project/${project._id}`} 
+                      <Link
+                        to={`/edit-project/${project._id}`}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-md transition-colors"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>

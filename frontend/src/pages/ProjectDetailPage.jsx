@@ -49,14 +49,14 @@ const ProjectDetailPage = () => {
   const [isLoadingProject, setIsLoadingProject] = useState(!location.state?.project);
 
   // Like state
-  const [liked, setLiked]     = useState(false);
+  const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [isLiking, setIsLiking]   = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
 
   // Follow state
-  const [following, setFollowing]     = useState(false);
+  const [following, setFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
-  const [isFollowing, setIsFollowing]   = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   // Gallery lightbox
   const [lightboxImg, setLightboxImg] = useState(null);
@@ -84,12 +84,12 @@ const ProjectDetailPage = () => {
     // Always fetch the real like count (visible to everyone)
     getLikeCount(project._id)
       .then((r) => setLikeCount(r.data?.count ?? 0))
-      .catch(() => {});
+      .catch(() => { });
 
     if (isRecruiter) {
       getLikeStatus(project._id)
         .then((r) => setLiked(Boolean(r.data?.liked)))
-        .catch(() => {});
+        .catch(() => { });
 
       const authorId = project.studentId?._id || project.studentId;
       if (authorId && authorId !== user?._id && authorId !== user?.id) {
@@ -98,7 +98,7 @@ const ProjectDetailPage = () => {
             setFollowing(Boolean(s.data?.following));
             setFollowerCount(c.data?.count ?? 0);
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     }
   }, [project?._id, isRecruiter]);
@@ -154,10 +154,10 @@ const ProjectDetailPage = () => {
   const author = project.studentId && typeof project.studentId === 'object'
     ? project.studentId
     : null;
-  const authorName    = author?.name    || project.studentName || 'Unknown';
+  const authorName = author?.name || project.studentName || 'Unknown';
   const authorInitial = authorName.charAt(0).toUpperCase();
-  const authorId      = author?._id;
-  const isOwnProject  = authorId && (authorId === user?._id || authorId === user?.id);
+  const authorId = author?._id;
+  const isOwnProject = authorId && (authorId === user?._id || authorId === user?.id);
 
   const allImages = [project.coverImage, ...(project.images || [])].filter(Boolean);
 
@@ -227,13 +227,12 @@ const ProjectDetailPage = () => {
                 onClick={handleLike}
                 disabled={isLiking || !isRecruiter}
                 title={!isRecruiter ? 'Only recruiters can like projects' : liked ? 'Unlike' : 'Like this project'}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-base font-bold transition-all duration-200 focus:outline-none border ${
-                  liked
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-base font-bold transition-all duration-200 focus:outline-none border ${liked
                     ? 'text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100'
                     : isRecruiter
                       ? 'text-slate-600 bg-slate-50 border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-100'
                       : 'text-slate-600 bg-slate-100 border-slate-300 cursor-default'
-                } disabled:opacity-80`}
+                  } disabled:opacity-80`}
               >
                 <span className={liked ? 'text-rose-500' : 'text-slate-500'}>
                   <HeartIcon filled={liked} />
@@ -282,6 +281,51 @@ const ProjectDetailPage = () => {
               </div>
             )}
 
+            {/* Reservation Details */}
+            {(project.exhibitionName || project.reservationDate || project.stallType || project.preferredStallSize || project.numberOfStalls || project.businessCategory) && (
+              <div className="flex flex-col gap-4">
+                <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Reservation Details</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 p-5 rounded-xl border border-slate-100 bg-slate-50/50">
+                  {project.exhibitionName && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Exhibition</span>
+                      <span className="text-sm font-semibold text-slate-800">{project.exhibitionName}</span>
+                    </div>
+                  )}
+                  {project.reservationDate && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Reservation Date</span>
+                      <span className="text-sm font-semibold text-slate-800">{formatDate(project.reservationDate)}</span>
+                    </div>
+                  )}
+                  {project.stallType && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Stall Type</span>
+                      <span className="text-sm font-semibold text-slate-800">{project.stallType}</span>
+                    </div>
+                  )}
+                  {project.preferredStallSize && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Stall Size</span>
+                      <span className="text-sm font-semibold text-slate-800">{project.preferredStallSize}</span>
+                    </div>
+                  )}
+                  {project.numberOfStalls && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">No. of Stalls</span>
+                      <span className="text-sm font-semibold text-slate-800">{project.numberOfStalls}</span>
+                    </div>
+                  )}
+                  {project.businessCategory && (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Business Category</span>
+                      <span className="text-sm font-semibold text-slate-800">{project.businessCategory}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Extra images gallery */}
             {project.images?.length > 0 && (
               <div className="flex flex-col gap-4">
@@ -314,7 +358,7 @@ const ProjectDetailPage = () => {
                 <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Built by</h2>
 
                 {/* Author info */}
-                <div 
+                <div
                   onClick={() => authorId && navigate(`/students/${authorId}`)}
                   className={`flex items-center gap-3 ${authorId ? 'cursor-pointer group' : ''}`}
                 >
@@ -353,11 +397,10 @@ const ProjectDetailPage = () => {
                     type="button"
                     onClick={handleFollow}
                     disabled={isFollowing}
-                    className={`w-full py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none border ${
-                      following
+                    className={`w-full py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none border ${following
                         ? 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                         : 'bg-slate-900 text-white border-slate-900 hover:bg-black'
-                    } disabled:opacity-60`}
+                      } disabled:opacity-60`}
                   >
                     {isFollowing ? 'Updating…' : following ? '✓ Following' : '+ Follow'}
                   </button>

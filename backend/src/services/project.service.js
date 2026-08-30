@@ -50,6 +50,12 @@ export const createProject = async (projectData, files, user) => {
         studentId: user.id,
         coverImage: coverImageUrl,
         images: extraImageUrls,
+        exhibitionName: projectData.exhibitionName,
+        reservationDate: projectData.reservationDate,
+        stallType: projectData.stallType,
+        preferredStallSize: projectData.preferredStallSize,
+        numberOfStalls: projectData.numberOfStalls ? Number(projectData.numberOfStalls) : undefined,
+        businessCategory: projectData.businessCategory,
     });
 
     await project.save();
@@ -109,7 +115,9 @@ export const updateProject = async (projectId, updateData, files, userId) => {
     }
     project.images = updatedImages;
 
-    const { title, description, githubUrl, demoUrl, tags } = updateData;
+    const { title, description, githubUrl, demoUrl, tags,
+        exhibitionName, reservationDate, stallType,
+        preferredStallSize, numberOfStalls, businessCategory } = updateData;
     if (title) project.title = title;
     if (description) project.description = description;
     if (githubUrl !== undefined) project.githubUrl = githubUrl;
@@ -119,6 +127,12 @@ export const updateProject = async (projectId, updateData, files, userId) => {
             ? tags.split(',').map((t) => t.trim()).filter(Boolean)
             : tags;
     }
+    if (exhibitionName !== undefined) project.exhibitionName = exhibitionName;
+    if (reservationDate !== undefined) project.reservationDate = reservationDate;
+    if (stallType !== undefined) project.stallType = stallType;
+    if (preferredStallSize !== undefined) project.preferredStallSize = preferredStallSize;
+    if (numberOfStalls !== undefined) project.numberOfStalls = Number(numberOfStalls);
+    if (businessCategory !== undefined) project.businessCategory = businessCategory;
 
     await project.save();
     return project;

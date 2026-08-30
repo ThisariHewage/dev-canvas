@@ -8,24 +8,30 @@ const EditProjectPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  
+
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const [form, setForm] = useState({
     title: '',
     description: '',
     githubUrl: '',
     demoUrl: '',
-    tags: ''
+    tags: '',
+    exhibitionName: '',
+    reservationDate: '',
+    stallType: '',
+    preferredStallSize: '',
+    numberOfStalls: '',
+    businessCategory: '',
   });
-  
+
   const [coverImage, setCoverImage] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [existingExtraImages, setExistingExtraImages] = useState([]);
   const [newExtraImages, setNewExtraImages] = useState([]);
   const [newExtraPreviews, setNewExtraPreviews] = useState([]);
-  
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
@@ -33,7 +39,7 @@ const EditProjectPage = () => {
       try {
         const response = await getProject(id);
         const project = response.data;
-        
+
         // Ensure only the author can edit
         const authorId = project.studentId?._id || project.studentId;
         const currentUserId = user?._id || user?.id;
@@ -48,9 +54,15 @@ const EditProjectPage = () => {
           description: project.description || '',
           githubUrl: project.githubUrl || '',
           demoUrl: project.demoUrl || '',
-          tags: Array.isArray(project.tags) ? project.tags.join(', ') : (project.tags || '')
+          tags: Array.isArray(project.tags) ? project.tags.join(', ') : (project.tags || ''),
+          exhibitionName: project.exhibitionName || '',
+          reservationDate: project.reservationDate ? new Date(project.reservationDate).toISOString().split('T')[0] : '',
+          stallType: project.stallType || '',
+          preferredStallSize: project.preferredStallSize || '',
+          numberOfStalls: project.numberOfStalls || '',
+          businessCategory: project.businessCategory || '',
         });
-        
+
         if (project.coverImage) {
           setCoverPreview(project.coverImage);
         }
@@ -65,7 +77,7 @@ const EditProjectPage = () => {
         setLoading(false);
       }
     };
-    
+
     if (id && user) {
       fetchProject();
     }
@@ -114,10 +126,16 @@ const EditProjectPage = () => {
     formData.append('githubUrl', form.githubUrl);
     formData.append('demoUrl', form.demoUrl);
     formData.append('tags', form.tags);
+    formData.append('exhibitionName', form.exhibitionName);
+    formData.append('reservationDate', form.reservationDate);
+    formData.append('stallType', form.stallType);
+    formData.append('preferredStallSize', form.preferredStallSize);
+    formData.append('numberOfStalls', form.numberOfStalls);
+    formData.append('businessCategory', form.businessCategory);
     if (coverImage) {
       formData.append('coverImage', coverImage);
     }
-    
+
     // Append existing images we want to keep
     formData.append('existingImages', JSON.stringify(existingExtraImages));
 
@@ -161,10 +179,10 @@ const EditProjectPage = () => {
   return (
     <div className="min-h-[calc(100vh-80px)] bg-white text-slate-900 py-12 px-4 sm:px-8 lg:px-40 font-sans overflow-y-auto">
       <div className="max-w-3xl mx-auto">
-        
+
         <div className="mb-10 pb-4 border-b border-slate-200">
           <div className="flex items-center gap-4 mb-2">
-            <button 
+            <button
               onClick={() => navigate('/my-portfolio')}
               className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors"
               title="Go Back"
@@ -177,11 +195,11 @@ const EditProjectPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8 pb-16">
-          
+
           {/* Title */}
           <div>
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Title</label>
-            <input 
+            <input
               type="text"
               name="title"
               value={form.title}
@@ -194,7 +212,7 @@ const EditProjectPage = () => {
           {/* Description */}
           <div>
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Description</label>
-            <textarea 
+            <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
@@ -226,11 +244,11 @@ const EditProjectPage = () => {
           {/* Extra Images */}
           <div>
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Project Gallery (Optional)</label>
-            
+
             {/* Grid for Previews */}
             {(existingExtraImages.length > 0 || newExtraPreviews.length > 0) && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                
+
                 {/* Existing Images */}
                 {existingExtraImages.map((imgUrl, index) => (
                   <div key={`existing-${index}`} className="relative h-24 rounded-md overflow-hidden border border-slate-200 group">
@@ -274,7 +292,7 @@ const EditProjectPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
             <div>
               <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Tags (comma separated)</label>
-              <input 
+              <input
                 type="text"
                 name="tags"
                 value={form.tags}
@@ -285,7 +303,7 @@ const EditProjectPage = () => {
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">GitHub URL</label>
-              <input 
+              <input
                 type="text"
                 name="githubUrl"
                 value={form.githubUrl}
@@ -296,7 +314,7 @@ const EditProjectPage = () => {
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Live Demo URL</label>
-              <input 
+              <input
                 type="text"
                 name="demoUrl"
                 value={form.demoUrl}
@@ -304,6 +322,94 @@ const EditProjectPage = () => {
                 placeholder="https://..."
                 className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
               />
+            </div>
+          </div>
+
+          {/* Reservation Details Section */}
+          <div className="pt-4 border-t border-slate-100">
+            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">Stall Reservation Details</label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Exhibition / Event</label>
+                <select
+                  name="exhibitionName"
+                  value={form.exhibitionName}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+                >
+                  <option value="">Select event...</option>
+                  <option value="TechExpo 2026">TechExpo 2026</option>
+                  <option value="CraftFair 2026">CraftFair 2026</option>
+                  <option value="Bookfair 2026">Bookfair 2026</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Reservation Date</label>
+                <input
+                  type="date"
+                  name="reservationDate"
+                  value={form.reservationDate}
+                  onChange={handleChange}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Stall Type</label>
+                <select
+                  name="stallType"
+                  value={form.stallType}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+                >
+                  <option value="">Select type...</option>
+                  <option value="Standard">Standard</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Corner Stall">Corner Stall</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Preferred Stall Size</label>
+                <select
+                  name="preferredStallSize"
+                  value={form.preferredStallSize}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+                >
+                  <option value="">Select size...</option>
+                  <option value="Small">Small</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Large">Large</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Number of Stalls</label>
+                <input
+                  type="number"
+                  name="numberOfStalls"
+                  value={form.numberOfStalls}
+                  onChange={handleChange}
+                  min="1"
+                  placeholder="1"
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Business Category</label>
+                <select
+                  name="businessCategory"
+                  value={form.businessCategory}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
+                >
+                  <option value="">Select category...</option>
+                  <option value="Food & Beverage">Food & Beverage</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Handicrafts">Handicrafts</option>
+                  <option value="Services">Services</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -324,7 +430,7 @@ const EditProjectPage = () => {
                 Cancel
               </button>
             </div>
-            
+
             <button
               type="button"
               onClick={() => setShowDeleteModal(true)}
