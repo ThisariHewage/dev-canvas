@@ -3,8 +3,18 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
-    required: true,
-    unique: true
+    unique: true,
+    sparse: true
+  },
+  asgardeoId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  provider: {
+    type: String,
+    enum: ['google', 'asgardeo'],
+    default: 'google'
   },
   email: {
     type: String,

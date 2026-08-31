@@ -1,5 +1,6 @@
 import { getMeAPI, selectRoleAPI, updateProfileAPI } from '../api/auth.api.js';
 import useAuthStore from '../store/authStore';
+import api from '../api/axios';
 
 export const authService = {
 
@@ -79,7 +80,13 @@ export const authService = {
     },
 
 
-    logout: () => {
-        useAuthStore.getState().resetAuth();
+    logout: async () => {
+        try {
+            useAuthStore.getState().resetAuth();
+            window.location.href = '/login?logged_out=true';
+        } catch (error) {
+            useAuthStore.getState().resetAuth();
+            window.location.href = '/login?logged_out=true';
+        }
     }
 };

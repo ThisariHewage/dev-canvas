@@ -5,6 +5,7 @@ export const getAllUsers = async (req, res, next) => {
         const users = await adminService.fetchAllUsers();
         return res.status(200).json({ success: true, count: users.length, data: users });
     } catch (err) {
+        console.error('[Admin Controller] Error in getAllUsers:', err);
         next(err);
     }
 };

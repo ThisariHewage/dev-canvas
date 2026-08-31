@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 
-export const handleGoogleCallback = (req, res) => {
+export const handleOAuthCallback = (req, res) => {
 
     const user = req.user
 
@@ -17,6 +17,7 @@ export const handleGoogleCallback = (req, res) => {
             name: user.name,
             role: user.role,
             isNewUser: user.isNewUser,
+            provider: user.provider || 'google',
         },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
@@ -48,6 +49,7 @@ export const selectRole = async (req, res, next) => {
                 name: user.name,
                 role: user.role,
                 isNewUser: false,
+                provider: user.provider || 'google',
             },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
@@ -96,6 +98,7 @@ export const updateProfile = async (req, res, next) => {
                 name: user.name,
                 role: user.role,
                 isNewUser: user.isNewUser,
+                provider: user.provider || 'google',
             },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
@@ -107,5 +110,15 @@ export const updateProfile = async (req, res, next) => {
     }
 }
 
+export const handleLogout = (req, res) => {
+    const provider = req.query.provider;
+    const orgName = process.env.ASGARDEO_ORG_NAME;
 
+    if (provider === 'asgardeo' && orgName) {
+        const postLogoutRedirect = encodeURIComponent(`${process.env.CLIENT_URL}/login`);
+        const endSessionUrl = `https://api.asgardeo.io/t/${orgName}/oidc/logout?post_logout_redirect_uri=${postLogoutRedirect}`;
+        return res.json({ success: true, logoutUrl: endSessionUrl });
+    }
 
+    res.json({ success: true, logoutUrl: null });
+}

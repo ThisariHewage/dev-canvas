@@ -2,6 +2,7 @@ import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import 'dotenv/config'
 import User from '../models/User.js';
+import './asgardeo.js' // register Asgardeo OIDC strategy
 
 passport.use(
     new GoogleStrategy(
@@ -33,5 +34,18 @@ passport.use(
         }
     )
 )
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
+});
 
 export default passport
