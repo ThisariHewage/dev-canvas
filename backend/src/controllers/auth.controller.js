@@ -4,13 +4,19 @@ import User from '../models/User.js'
 
 const JWT_OPTIONS = { algorithm: 'HS256', expiresIn: '7d' }
 
+const getPrimaryClientUrl = () => {
+    const rawUrl = process.env.CLIENT_URL || 'http://localhost:5173'
+    return rawUrl.split(',')[0].trim()
+}
+
 export const handleOAuthCallback = (req, res) => {
+    const clientUrl = getPrimaryClientUrl()
 
     const user = req.user
 
     if (user.isDisabled) {
         console.warn(`[AUTH] Blocked login for disabled account: ${user.email}`)
-        return res.redirect(`${process.env.CLIENT_URL}/login?error=Account suspended. Please contact support.`)
+        return res.redirect(`${clientUrl}/login?error=Account suspended. Please contact support.`)
     }
 
     console.info(`[AUTH] Successful OAuth login: ${user.email} (${user.provider || 'google'})`)
@@ -28,7 +34,7 @@ export const handleOAuthCallback = (req, res) => {
         JWT_OPTIONS
     )
 
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`)
+    res.redirect(`${clientUrl}/auth/callback?token=${token}`)
 }
 
 export const selectRole = async (req, res, next) => {
@@ -119,7 +125,8 @@ export const handleLogout = (req, res) => {
     const orgName = process.env.ASGARDEO_ORG_NAME;
 
     if (provider === 'asgardeo' && orgName) {
-        const postLogoutRedirect = encodeURIComponent(`${process.env.CLIENT_URL}/login`);
+        const clientUrl = getPrimaryClientUrl();
+        const postLogoutRedirect = encodeURIComponent(`${clientUrl}/login`);
         const endSessionUrl = `https://api.asgardeo.io/t/${orgName}/oidc/logout?post_logout_redirect_uri=${postLogoutRedirect}`;
         return res.json({ success: true, logoutUrl: endSessionUrl });
     }

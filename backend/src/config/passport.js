@@ -9,26 +9,51 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: '/api/auth/google/callback',
+            callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/api/auth/google/callback',
             proxy: true,
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
-                // check if user already exists
-                let user = await User.findOne({ googleId: profile.id });
+                const email = profile.emails?.[0]?.value
+                const googleId = profile.id
 
-                if (!user) {
+                // 1. Search for user by googleId
+                let user = await User.findOne({ googleId })
+
+                // 2. If not found by googleId, check by email (e.g. registered via Asgardeo)
+                if (!user && email) {
+                    user = await User.findOne({ email })
+                }
+
+                if (user) {
+                    // Synchronize/link existing account
+                    let isModified = false
+                    if (!user.googleId) {
+                        user.googleId = googleId
+                        isModified = true
+                    }
+                    if (!user.profilePic && profile.photos?.[0]?.value) {
+                        user.profilePic = profile.photos[0].value
+                        isModified = true
+                    }
+                    if (isModified) {
+                        await user.save()
+                    }
+                } else {
+                    // Create new user record
                     user = await User.create({
-                        googleId: profile.id,
-                        email: profile.emails[0].value,
+                        googleId,
+                        email,
                         name: profile.displayName,
-                        profilePic: profile.photos[0].value,
+                        profilePic: profile.photos?.[0]?.value || '',
+                        provider: 'google',
                         role: 'STUDENT',
                         isNewUser: true,
                     })
                 }
                 done(null, user)
             } catch (err) {
+                console.error('[Google OAuth] Verification callback error:', err)
                 done(err, null)
             }
         }

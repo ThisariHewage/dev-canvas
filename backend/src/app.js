@@ -26,7 +26,10 @@ app.use(helmet())
 app.use(morgan('dev'))
 
 // ── A05: Strict CORS ─────────────────────────────────────────
-const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : []
+const defaultDevOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174']
+const envOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(s => s.trim()) : []
+const allowedOrigins = Array.from(new Set([...envOrigins, ...defaultDevOrigins]))
+
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (e.g., server-to-server, curl)

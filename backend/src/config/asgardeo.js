@@ -15,7 +15,7 @@ passport.use(
             userInfoURL: `https://api.asgardeo.io/t/${orgName}/oauth2/userinfo`,
             clientID: process.env.ASGARDEO_CLIENT_ID,
             clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
-            callbackURL: '/api/auth/asgardeo/callback',
+            callbackURL: process.env.ASGARDEO_CALLBACK_URL || 'http://localhost:3000/api/auth/asgardeo/callback',
             scope: ['openid', 'profile', 'email', 'phone'],
             passReqToCallback: false,
         },

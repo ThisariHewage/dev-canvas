@@ -655,9 +655,6 @@ const AdminPage = () => {
                                         <tr className="border-b border-slate-100 bg-slate-100/50 text-slate-500 font-bold uppercase tracking-wider text-[12px]">
                                             <th className="px-6 py-4">Project</th>
                                             <th className="px-6 py-4">Author</th>
-                                            <th className="px-6 py-4">Exhibition</th>
-                                            <th className="px-6 py-4">Stall Type</th>
-                                            <th className="px-6 py-4">Reservation</th>
                                             <th className="px-6 py-4">Created</th>
                                             <th className="px-6 py-4 text-center">Actions</th>
                                         </tr>
@@ -698,25 +695,6 @@ const AdminPage = () => {
                                                             <span className="font-bold tracking-tight text-slate-700">{project.studentId?.name || 'Unknown User'}</span>
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {project.exhibitionName ? (
-                                                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-600 border border-indigo-100">
-                                                            {project.exhibitionName}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-slate-300 text-xs">—</span>
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {project.stallType ? (
-                                                        <span className="text-sm font-medium text-slate-600">{project.stallType}</span>
-                                                    ) : (
-                                                        <span className="text-slate-300 text-xs">—</span>
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4 text-slate-400 font-medium tracking-tight text-xs">
-                                                    {project.reservationDate ? formatDate(project.reservationDate) : '—'}
                                                 </td>
                                                 <td className="px-6 py-4 text-slate-400 font-medium tracking-tight text-xs">
                                                     {formatDateTime(project.createdAt)}
