@@ -1,0 +1,9 @@
+{
+    "sid": "SE2022024",
+    "name": "E.H.T.U. Dewmini",
+    "app-url": "http://localhost:5173/",
+    "git": "https://github.com/ThisariHewage/dev-canvas.git",
+    "blog": [
+        "https://medium.com/@thisaridewmini428/building-a-secure-student-portal-oidc-authentication-owasp-top-10-defensive-hardening-cdf167f64e44"
+    ]
+}
