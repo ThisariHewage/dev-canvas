@@ -18,12 +18,6 @@ const EditProjectPage = () => {
     githubUrl: '',
     demoUrl: '',
     tags: '',
-    exhibitionName: '',
-    reservationDate: '',
-    stallType: '',
-    preferredStallSize: '',
-    numberOfStalls: '',
-    businessCategory: '',
   });
 
   const [coverImage, setCoverImage] = useState(null);
@@ -55,12 +49,6 @@ const EditProjectPage = () => {
           githubUrl: project.githubUrl || '',
           demoUrl: project.demoUrl || '',
           tags: Array.isArray(project.tags) ? project.tags.join(', ') : (project.tags || ''),
-          exhibitionName: project.exhibitionName || '',
-          reservationDate: project.reservationDate ? new Date(project.reservationDate).toISOString().split('T')[0] : '',
-          stallType: project.stallType || '',
-          preferredStallSize: project.preferredStallSize || '',
-          numberOfStalls: project.numberOfStalls || '',
-          businessCategory: project.businessCategory || '',
         });
 
         if (project.coverImage) {
@@ -126,12 +114,6 @@ const EditProjectPage = () => {
     formData.append('githubUrl', form.githubUrl);
     formData.append('demoUrl', form.demoUrl);
     formData.append('tags', form.tags);
-    formData.append('exhibitionName', form.exhibitionName);
-    formData.append('reservationDate', form.reservationDate);
-    formData.append('stallType', form.stallType);
-    formData.append('preferredStallSize', form.preferredStallSize);
-    formData.append('numberOfStalls', form.numberOfStalls);
-    formData.append('businessCategory', form.businessCategory);
     if (coverImage) {
       formData.append('coverImage', coverImage);
     }
@@ -325,93 +307,7 @@ const EditProjectPage = () => {
             </div>
           </div>
 
-          {/* Reservation Details Section */}
-          <div className="pt-4 border-t border-slate-100">
-            <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">Stall Reservation Details</label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Exhibition / Event</label>
-                <select
-                  name="exhibitionName"
-                  value={form.exhibitionName}
-                  onChange={handleChange}
-                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
-                >
-                  <option value="">Select event...</option>
-                  <option value="TechExpo 2026">TechExpo 2026</option>
-                  <option value="CraftFair 2026">CraftFair 2026</option>
-                  <option value="Bookfair 2026">Bookfair 2026</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Reservation Date</label>
-                <input
-                  type="date"
-                  name="reservationDate"
-                  value={form.reservationDate}
-                  onChange={handleChange}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Stall Type</label>
-                <select
-                  name="stallType"
-                  value={form.stallType}
-                  onChange={handleChange}
-                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
-                >
-                  <option value="">Select type...</option>
-                  <option value="Standard">Standard</option>
-                  <option value="Premium">Premium</option>
-                  <option value="Corner Stall">Corner Stall</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Preferred Stall Size</label>
-                <select
-                  name="preferredStallSize"
-                  value={form.preferredStallSize}
-                  onChange={handleChange}
-                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
-                >
-                  <option value="">Select size...</option>
-                  <option value="Small">Small</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Large">Large</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Number of Stalls</label>
-                <input
-                  type="number"
-                  name="numberOfStalls"
-                  value={form.numberOfStalls}
-                  onChange={handleChange}
-                  min="1"
-                  placeholder="1"
-                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Business Category</label>
-                <select
-                  name="businessCategory"
-                  value={form.businessCategory}
-                  onChange={handleChange}
-                  className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:outline-none focus:border-slate-900 transition-colors"
-                >
-                  <option value="">Select category...</option>
-                  <option value="Food & Beverage">Food & Beverage</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Handicrafts">Handicrafts</option>
-                  <option value="Services">Services</option>
-                </select>
-              </div>
-            </div>
-          </div>
+
 
           <div className="pt-8 flex flex-wrap gap-4 items-center justify-between">
             <div className="flex gap-4">
