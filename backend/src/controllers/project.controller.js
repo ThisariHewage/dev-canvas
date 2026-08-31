@@ -32,7 +32,7 @@ export const getProjectById = async (req, res) => {
 
 export const updateProject = async (req, res) => {
   try {
-    const project = await projectService.updateProject(req.params.id, req.body, req.files, req.user.id);
+    const project = await projectService.updateProject(req.params.id, req.body, req.files, req.user.id, req.user.role);
     res.json(project);
   } catch (err) {
     if (err.message === 'Project not found') return res.status(404).json({ message: err.message });
@@ -43,7 +43,7 @@ export const updateProject = async (req, res) => {
 
 export const deleteProject = async (req, res) => {
   try {
-    const result = await projectService.deleteProject(req.params.id, req.user.id);
+    const result = await projectService.deleteProject(req.params.id, req.user.id, req.user.role);
     res.json(result);
   } catch (err) {
     if (err.message === 'Project not found') return res.status(404).json({ message: err.message });

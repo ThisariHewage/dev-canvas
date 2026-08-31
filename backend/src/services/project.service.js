@@ -1,6 +1,7 @@
 import Project from '../models/Project.js';
 import eventBus from '../events/eventBus.js';
 import cloudinary from '../lib/cloudinary.js';
+import mongoose from 'mongoose';
 
 export const uploadToCloudinary = async (buffer, folder) => {
     return new Promise((resolve, reject) => {
@@ -84,10 +85,11 @@ export const getProjectById = async (projectId) => {
     return project;
 };
 
-export const updateProject = async (projectId, updateData, files, userId) => {
+export const updateProject = async (projectId, updateData, files, userId, userRole) => {
     const project = await Project.findById(projectId);
     if (!project) throw new Error('Project not found');
-    if (project.studentId.toString() !== userId) throw new Error('Unauthorized');
+    // A01: Only the project owner or an ADMIN can update
+    if (project.studentId.toString() !== userId && userRole !== 'ADMIN') throw new Error('Unauthorized');
 
     if (files?.coverImage?.[0]) {
         project.coverImage = await uploadToCloudinary(
@@ -138,10 +140,11 @@ export const updateProject = async (projectId, updateData, files, userId) => {
     return project;
 };
 
-export const deleteProject = async (projectId, userId) => {
+export const deleteProject = async (projectId, userId, userRole) => {
     const project = await Project.findById(projectId);
     if (!project) throw new Error('Project not found');
-    if (project.studentId.toString() !== userId) throw new Error('Unauthorized');
+    // A01: Only the project owner or an ADMIN can delete
+    if (project.studentId.toString() !== userId && userRole !== 'ADMIN') throw new Error('Unauthorized');
 
     await project.deleteOne();
     return { message: 'Project deleted' };

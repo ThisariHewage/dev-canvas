@@ -2,13 +2,18 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
 
+const JWT_OPTIONS = { algorithm: 'HS256', expiresIn: '7d' }
+
 export const handleOAuthCallback = (req, res) => {
 
     const user = req.user
 
     if (user.isDisabled) {
+        console.warn(`[AUTH] Blocked login for disabled account: ${user.email}`)
         return res.redirect(`${process.env.CLIENT_URL}/login?error=Account suspended. Please contact support.`)
     }
+
+    console.info(`[AUTH] Successful OAuth login: ${user.email} (${user.provider || 'google'})`)
 
     const token = jwt.sign(
         {
@@ -20,8 +25,7 @@ export const handleOAuthCallback = (req, res) => {
             provider: user.provider || 'google',
         },
         process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-
+        JWT_OPTIONS
     )
 
     res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`)
@@ -52,7 +56,7 @@ export const selectRole = async (req, res, next) => {
                 provider: user.provider || 'google',
             },
             process.env.JWT_SECRET,
-            { expiresIn: '7d' }
+            JWT_OPTIONS
         )
 
         res.json({ success: true, token, user })
@@ -101,7 +105,7 @@ export const updateProfile = async (req, res, next) => {
                 provider: user.provider || 'google',
             },
             process.env.JWT_SECRET,
-            { expiresIn: '7d' }
+            JWT_OPTIONS
         );
 
         res.json({ success: true, token, user });

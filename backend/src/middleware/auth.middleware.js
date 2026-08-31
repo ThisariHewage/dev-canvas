@@ -11,14 +11,15 @@ const authMiddleware = (req, res, next) => {
     const token = authHeader.split(' ')[1]
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        // A02/A07: Enforce HS256 algorithm to prevent algorithm confusion attacks
+        const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] })
         req.user = decoded
         next()
     } catch (err) {
+        // A09: Log failed auth attempts (without exposing token)
+        console.warn(`[AUTH] Invalid token attempt from ${req.ip}: ${err.message}`)
         return res.status(403).json({ success: false, message: 'Invalid token' })
     }
-
-
 }
 
 export default authMiddleware
