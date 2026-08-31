@@ -5,7 +5,6 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import 'dotenv/config'
 import session from 'express-session'
-import mongoSanitize from 'express-mongo-sanitize'
 import rateLimit from 'express-rate-limit'
 import passport from './config/passport.js'
 import authRoutes from './routes/auth.routes.js'
@@ -40,10 +39,28 @@ app.use(cors({
   credentials: true,
 }))
 
-// ── A03: NoSQL Injection Protection ──────────────────────────
+// ── A03: NoSQL Injection Protection (Express 5 compatible) ──
+// express-mongo-sanitize is incompatible with Express 5 (read-only req.query).
+// Custom sanitizer strips MongoDB operators ($, .) from req.body and req.params.
+const sanitizeValue = (obj) => {
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) return obj.map(sanitizeValue)
+  const clean = {}
+  for (const key of Object.keys(obj)) {
+    if (key.startsWith('$') || key.includes('.')) continue // strip dangerous keys
+    clean[key] = sanitizeValue(obj[key])
+  }
+  return clean
+}
+
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
-app.use(mongoSanitize())
+app.use((req, res, next) => {
+  if (req.body && typeof req.body === 'object') {
+    req.body = sanitizeValue(req.body)
+  }
+  next()
+})
 
 // ── A02: Secure Session Cookies ──────────────────────────────
 const isProduction = process.env.NODE_ENV === 'production'
