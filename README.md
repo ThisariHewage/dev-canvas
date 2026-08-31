@@ -174,14 +174,14 @@ Create a `.env` file in the **backend** directory:
 ```env
 PORT=3000
 MONGODB_URI=your_mongodb_uri
-CLIENT_URL=https://localhost:5173
+CLIENT_URL=http://localhost:5173
 JWT_SECRET=your_super_secret_key
 NODE_ENV=development
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=https://localhost:3000/api/auth/google/callback
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
 
 # Asgardeo OIDC
 ASGARDEO_CLIENT_ID=your_asgardeo_client_id
@@ -196,7 +196,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 Create a `.env` file in the **frontend** directory:
 ```env
-VITE_API_URL=https://localhost:3000/api
+VITE_API_URL=http://localhost:3000/api
 ```
 
 ### 3. Run the Application
@@ -214,7 +214,7 @@ cd frontend
 npm run dev
 ```
 
-The app will be running securely at `https://localhost:5173`.
+The app will be running securely at `http://localhost:5173`.
 
 ---
 
