@@ -4,8 +4,16 @@ import User from './src/models/User.js'
 
 async function listUsers() {
     await mongoose.connect(process.env.MONGODB_URI)
-    const users = await User.find({})
-    console.log(JSON.stringify(users.map(u => ({ id: u._id, name: u.name, email: u.email, provider: u.provider })), null, 2))
+    const users = await User.find({ provider: 'asgardeo' })
+    console.log(JSON.stringify(users.map(u => ({
+        id: u._id.toString(),
+        asgardeoId: u.asgardeoId,
+        name: u.name,
+        email: u.email,
+        username: u.email ? u.email.split('@')[0] : 'N/A',
+        role: u.role,
+        contactNumber: u.contactNumber || 'Not provided in Asgardeo'
+    })), null, 2))
     process.exit(0)
 }
 

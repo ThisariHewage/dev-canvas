@@ -16,7 +16,8 @@ passport.use(
             clientID: process.env.ASGARDEO_CLIENT_ID,
             clientSecret: process.env.ASGARDEO_CLIENT_SECRET,
             callbackURL: '/api/auth/asgardeo/callback',
-            scope: ['openid', 'profile', 'email'],
+            scope: ['openid', 'profile', 'email', 'phone'],
+            passReqToCallback: false,
         },
         async (issuer, profile, done) => {
             try {
@@ -39,26 +40,53 @@ passport.use(
                     profile._json?.username ||
                     'Asgardeo User'
 
-                console.log('[Asgardeo] Extracted data:', { asgardeoId, email, name })
+                // Comprehensive extraction of contact number from Asgardeo profile / OIDC claims
+                const contactNumber =
+                    profile._json?.phone_number ||
+                    profile._json?.mobile_number ||
+                    profile._json?.mobile ||
+                    profile._json?.phoneNumber ||
+                    profile._json?.telephoneNumber ||
+                    profile._json?.phone ||
+                    profile._json?.['http://wso2.org/claims/mobile'] ||
+                    profile._json?.['http://wso2.org/claims/telephoneNumber'] ||
+                    profile._json?.['http://wso2.org/claims/phone_number'] ||
+                    (Array.isArray(profile.phoneNumbers) ? profile.phoneNumbers[0]?.value : profile.phoneNumbers) ||
+                    null
+
+                console.log('[Asgardeo] Extracted profile data:', { asgardeoId, email, name, contactNumber })
 
                 if (!asgardeoId) {
                     return done(new Error('No subject/id received from Asgardeo'), null)
                 }
 
-                // Try to find user by asgardeoId first, then by email
+                // Find user by asgardeoId or email
                 let user = await User.findOne({ asgardeoId })
-
                 if (!user && email) {
                     user = await User.findOne({ email })
-                    if (user) {
-                        // Link existing user (e.g. Google user) with Asgardeo
-                        user.asgardeoId = asgardeoId
-                        user.provider = 'asgardeo'
-                        await user.save()
-                    }
                 }
 
-                if (!user) {
+                if (user) {
+                    // Synchronize existing user
+                    let isModified = false
+                    if (!user.asgardeoId) {
+                        user.asgardeoId = asgardeoId
+                        user.provider = 'asgardeo'
+                        isModified = true
+                    }
+                    if (contactNumber && user.contactNumber !== contactNumber) {
+                        user.contactNumber = contactNumber
+                        isModified = true
+                    }
+                    if (name && user.name && user.name !== name && user.name.startsWith('Asgardeo Member')) {
+                        user.name = name
+                        isModified = true
+                    }
+                    if (isModified) {
+                        await user.save()
+                    }
+                } else {
+                    // Create new user record with mapped attributes
                     user = await User.create({
                         asgardeoId,
                         email,
@@ -67,6 +95,7 @@ passport.use(
                         provider: 'asgardeo',
                         role: 'STUDENT',
                         isNewUser: true,
+                        contactNumber: contactNumber || '',
                     })
                 }
 

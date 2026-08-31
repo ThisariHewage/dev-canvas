@@ -7,29 +7,14 @@ async function updateRealAsgardeoUser() {
     console.log('Connected to MongoDB.')
 
     const result = await User.updateMany(
-        { provider: 'asgardeo' },
+        {},
         {
             $set: {
-                name: 'Thisari Hewage',
-                email: 'thisaridewmini428@gmail.com'
+                contactNumber: '+94 77 123 4567'
             }
         }
     )
-
-    console.log(`Updated ${result.modifiedCount} Asgardeo user(s) to Thisari Hewage (thisaridewmini428@gmail.com).`)
-
-    // Also check if any user has placeholder email
-    const placeholderResult = await User.updateMany(
-        { email: /@asgardeo\.user|devcanvas\.io/ },
-        {
-            $set: {
-                name: 'Thisari Hewage',
-                email: 'thisaridewmini428@gmail.com'
-            }
-        }
-    )
-    console.log(`Updated ${placeholderResult.modifiedCount} placeholder user(s).`)
-
+    console.log(`Updated ${result.modifiedCount} user(s) with contactNumber '+94 77 123 4567'.`)
     process.exit(0)
 }
 

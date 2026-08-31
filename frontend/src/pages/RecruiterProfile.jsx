@@ -83,11 +83,10 @@ const RecruiterProfile = ({ profile: profileProp }) => {
               onClick={handleFollowToggle}
               disabled={loading}
               aria-pressed={following}
-              className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
-                following
-                  ? 'bg-slate-100 text-slate-800 border border-slate-200'
-                  : 'bg-purple-600 text-white hover:bg-purple-500'
-              } disabled:opacity-60`}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${following
+                ? 'bg-slate-100 text-slate-800 border border-slate-200'
+                : 'bg-purple-600 text-white hover:bg-purple-500'
+                } disabled:opacity-60`}
             >
               {following ? 'Following' : 'Follow'}
             </button>
@@ -100,6 +99,33 @@ const RecruiterProfile = ({ profile: profileProp }) => {
         </div>
 
         {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
+
+        {/* Account Details Card */}
+        <div className="mt-6 p-5 bg-slate-50 border border-slate-200 rounded-xl">
+          <h2 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">Account Details</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Username</p>
+              <p className="text-sm text-slate-800 font-medium">
+                {profile?.email ? profile.email.split('@')[0] : '—'}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Full Name</p>
+              <p className="text-sm text-slate-800 font-medium">{profile?.name || '—'}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Email Address</p>
+              <p className="text-sm text-slate-800 font-medium">{profile?.email || '—'}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Contact Number</p>
+              <p className="text-sm text-slate-800 font-medium">
+                {profile?.contactNumber || <span className="text-slate-400 italic">Not provided</span>}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

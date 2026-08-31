@@ -350,6 +350,42 @@ const AdminProfile = () => {
                     )}
                 </div>
 
+                {/* Account Details Card */}
+                <div
+                    className="profile-fade-1 rounded-2xl"
+                    style={{ border: '1px solid #f1f5f9', background: '#fafafa', padding: '22px 24px' }}
+                >
+                    <h2 style={{ fontSize: 12, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
+                        Account Details
+                    </h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px' }}>
+                        <div>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Username</p>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>
+                                {user?.email ? user.email.split('@')[0] : '—'}
+                            </p>
+                        </div>
+                        <div>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Full Name</p>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>
+                                {user?.name || '—'}
+                            </p>
+                        </div>
+                        <div>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Email Address</p>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>
+                                {user?.email || '—'}
+                            </p>
+                        </div>
+                        <div>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Contact Number</p>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>
+                                {user?.contactNumber || <span style={{ color: '#94a3b8', fontStyle: 'italic', fontWeight: 500 }}>Not provided</span>}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Admin Permissions Card */}
                 {user?.role === 'ADMIN' && (
                     <div
