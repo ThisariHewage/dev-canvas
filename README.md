@@ -156,7 +156,7 @@ sequenceDiagram
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/Pabodha-Wann/dev-canvas.git
+git clone https://github.com/ThisariHewage/dev-canvas.git
 cd dev-canvas
 
 # Install backend dependencies
